@@ -12,7 +12,7 @@ def create_app():
     app.config.from_object(config)
 
     # Static files
-    import static_manager
+    import webserver.static_manager
     static_manager.read_manifest()
 
     # Blueprints
