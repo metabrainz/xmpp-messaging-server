@@ -24,6 +24,7 @@
     "lodash": "3.10.1",
     "q": "1.4.1",
     "react": "0.14.3",
+    "react-dom": "0.14.3",
     "vinyl-source-stream": "1.1.0",
     "yarb": "0.5.1"
   },

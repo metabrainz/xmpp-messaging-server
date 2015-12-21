@@ -22,7 +22,7 @@ class JID:
 
     @property
     def full(self):
-        string = "{localpart}@{domainpart}"
+        string = "%s@%s" % (self.localpart, self.domainpart)
         if self.resource:
             string += "/" + self.resource
         return string

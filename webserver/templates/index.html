@@ -8,11 +8,13 @@
 
   <body>
     <h1>XMPP connection testing</h1>
-    <p>See JavaScript console. 🚀</p>
+    <p><em>See JavaScript console.</em> 🚀</p>
+
+    <div id="react-container"></div>
 
     <script src="{{ 'common.js'|make_static_path }}"></script>
     <script type='text/javascript'>
-      var Attacher = {
+      var AttacherConfig = {
         JID: '{{ jid }}',
         SID: '{{ sid }}',
         RID: '{{ rid }}'
