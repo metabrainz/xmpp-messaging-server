@@ -15,6 +15,7 @@
     "babel-preset-stage-2": "6.1.18",
     "babelify": "7.2.0",
     "gulp": "3.9.0",
+    "strophe": "1.2.3",
     "gulp-less": "3.0.5",
     "gulp-rev": "6.0.1",
     "gulp-streamify": "1.0.2",

@@ -15,6 +15,10 @@ def create_app():
     import webserver.static_manager
     static_manager.read_manifest()
 
+    # Template utilities
+    app.jinja_env.add_extension('jinja2.ext.do')
+    app.jinja_env.filters['make_static_path'] = static_manager.get_file_path
+
     # Blueprints
     from webserver.views.main import main_bp
     app.register_blueprint(main_bp)

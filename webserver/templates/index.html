@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>XMPP connection testing</title>
+  </head>
+
+  <body>
+    <h1>XMPP connection testing</h1>
+    <p>See JavaScript console. 🚀</p>
+
+    <script src="{{ 'common.js'|make_static_path }}"></script>
+    <script type='text/javascript'>
+      var Attacher = {
+        JID: '{{ jid }}',
+        SID: '{{ sid }}',
+        RID: '{{ rid }}'
+      };
+    </script>
+    <script src="{{ 'attacher.js'|make_static_path }}"></script>
+  </body>
+
+</html>

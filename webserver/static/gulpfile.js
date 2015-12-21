@@ -1,14 +1,14 @@
-var _ = require('lodash');
-var fs = require('fs');
-var gulp = require('gulp');
-var less = require('gulp-less');
-var path = require('path');
-var rev = require('gulp-rev');
-var source = require('vinyl-source-stream');
-var streamify = require('gulp-streamify');
-var through2 = require('through2');
-var Q = require('q');
-var yarb = require('yarb');
+let _ = require('lodash');
+let fs = require('fs');
+let gulp = require('gulp');
+let less = require('gulp-less');
+let path = require('path');
+let rev = require('gulp-rev');
+let source = require('vinyl-source-stream');
+let streamify = require('gulp-streamify');
+let through2 = require('through2');
+let Q = require('q');
+let yarb = require('yarb');
 
 const CACHED_BUNDLES = new Map();
 const STATIC_DIR = path.resolve(__dirname, '../static');
@@ -28,7 +28,7 @@ function writeManifest() {
 }
 
 function writeResource(stream) {
-  var deferred = Q.defer();
+  let deferred = Q.defer();
 
   stream
     .pipe(streamify(rev()))
@@ -69,7 +69,7 @@ function runYarb(resourceName, callback) {
     return CACHED_BUNDLES.get(resourceName);
   }
 
-  var bundle = transformBundle(yarb(path.resolve(SCRIPTS_DIR, resourceName), {
+  let bundle = transformBundle(yarb(path.resolve(SCRIPTS_DIR, resourceName), {
     debug: false // disable sourcemaps
   }));
 
@@ -92,10 +92,15 @@ function writeScript(b, resourceName) {
 function buildScripts() {
   process.env.NODE_ENV = String(process.env.DEVELOPMENT_SERVER) === '1' ? 'development' : 'production';
 
-  var commonBundle = runYarb('common.js');
+  let commonBundle = runYarb('common.js');
+
+  let attacherBundle = runYarb('attacher.js', function (b) {
+    b.external(commonBundle);
+  });
 
   return Q.all([
     writeScript(commonBundle, 'common.js'),
+    writeScript(attacherBundle, 'attacher.js'),
   ]).then(writeManifest);
 }
 
