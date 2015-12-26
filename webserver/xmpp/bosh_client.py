@@ -1,5 +1,5 @@
 from xml.etree import ElementTree as ET
-from webserver.jid import JID
+from sleekxmpp.jid import JID
 import requests
 import random
 import base64
@@ -61,7 +61,7 @@ class BOSHClient:
             "xml:lang": "en",
             "xmpp:version": "1.0",
             "rid": str(self.rid),
-            "to": self.jid.domainpart,
+            "to": self.jid.domain,
             "hold": hold,
             "wait": wait,
         })
@@ -76,7 +76,7 @@ class BOSHClient:
                 "xmlns": SASL_XMLNS,
                 "mechanism": "PLAIN",
             })
-            sasl_str = "\000%s\000%s" % (self.jid.localpart, self.password)
+            sasl_str = "\000%s\000%s" % (self.jid.local, self.password)
             auth.text = base64.b64encode(sasl_str.encode(encoding="utf-8")).decode("utf-8")
             retb, elems = self.send_body(self.build_body(auth))
 

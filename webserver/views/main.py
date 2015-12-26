@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from flask import Blueprint, render_template
-from webserver.bosh_client import BOSHClient
+from webserver.xmpp.bosh_client import BOSHClient
 
 main_bp = Blueprint('main', __name__)
 
