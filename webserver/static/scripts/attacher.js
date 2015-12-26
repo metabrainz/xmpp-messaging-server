@@ -95,15 +95,23 @@ class Chat extends React.Component {
         .cnode(Strophe.xmlElement('body', body)).up()
         .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
     this.state.connection.send(reply);
+    try {
+      this.setState({msgLog: this.state.msgLog.concat("You say: " + body)});
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   render() {
     let logItems = [];
     this.state.msgLog.forEach(function (message) {
-        logItems.unshift(<LogItem message={ message.toString() } />);
+      logItems.unshift(<LogItem message={ message.toString() }/>);
     }.bind(this));
     return (
-        <ul>{ logItems }</ul>
+        <div>
+          <InputForm onSend={this.sendTestMessage.bind(this)}/>
+          <ul>{ logItems }</ul>
+        </div>
     );
   }
 }
@@ -128,6 +136,54 @@ class LogItem extends React.Component {
 
 LogItem.propTypes = {
   message: PropTypes.string.isRequired,
+};
+
+
+class InputForm extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: "",
+    };
+  }
+
+  handleSubmit(event) {
+    let message = this.state.message.trim();
+    if (!message) {
+      return;
+    }
+    try {
+    this.props.onSend(message);
+    this.setState({message: event.target.value});
+      } catch (e) {
+        console.error(e);
+      }
+    return true;
+  }
+
+  handleMessageChange(event) {
+    this.setState({message: event.target.value});
+  }
+
+  render() {
+    return (
+        <div>
+          <input
+              type="text"
+              placeholder="Message"
+              value={this.state.message}
+              onChange={this.handleMessageChange.bind(this)}
+          />
+          <button onClick={this.handleSubmit.bind(this)}>Send</button>
+        </div>
+    );
+  }
+
+}
+
+InputForm.propTypes = {
+  onSend: PropTypes.func.isRequired,
 };
 
 
