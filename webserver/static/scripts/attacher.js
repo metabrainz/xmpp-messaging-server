@@ -22,10 +22,10 @@ class Chat extends React.Component {
 
     let connection = new Strophe.Connection(this.props.service);
     connection.rawInput = function (data) {
-      console.log("XMPP RECV: ", data);
+      console.debug("XMPP RECV: ", data);
     };
     connection.rawOutput = function (data) {
-      console.log("XMPP SENT: ", data);
+      console.debug("XMPP SENT: ", data);
     };
 
     connection.addHandler(this.onReceiveMsg.bind(this), null, 'message', null, null, null);
@@ -37,7 +37,7 @@ class Chat extends React.Component {
         this.props.sid,
         this.props.rid,
         function (arg) {
-          console.log("Session attached!", arg);
+          console.debug("Session attached!", arg);
         }
     );
 
@@ -51,19 +51,17 @@ class Chat extends React.Component {
                 xmlns: 'http://jabber.org/protocol/disco#info'
               }),
           function (arg) {
-            console.log("IQ callback", arg);
+            console.debug("IQ callback", arg);
           },
           function (arg) {
-            console.log("IQ errback", arg);
+            console.debug("IQ errback", arg);
           }
       );
-
-      this.sendTestMessage("I'm attached!");
     });
   }
 
   onReceiveMsg(msg) {
-    console.log("onReceiveMsg", msg);
+    console.debug("onReceiveMsg", msg);
 
     let to = msg.getAttribute('to');
     let from = msg.getAttribute('from');
@@ -80,12 +78,11 @@ class Chat extends React.Component {
 
     // We must return true to keep the handler alive. Returning false would
     // remove it after it finishes.
-    console.log("Hey there! I'm about to return true.");
     return true;
   }
 
   onOwnMessage(msg) {
-    console.log("onOwnMessage", msg);
+    console.debug("onOwnMessage", msg);
     // Same here...
     return true;
   }
@@ -117,6 +114,7 @@ Chat.propTypes = {
   sid: PropTypes.string.isRequired,
   rid: PropTypes.string.isRequired,
 };
+
 
 class LogItem extends React.Component {
 
