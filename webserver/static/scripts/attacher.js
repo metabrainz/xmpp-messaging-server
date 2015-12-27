@@ -205,6 +205,10 @@ class Chat extends React.Component {
     }
   }
 
+  handleAddresseeChange(event) {
+    this.setState({addressee: event.target.value});
+  }
+
   render() {
     let logItems = [];
     this.state.msgLog.forEach(function (message) {
@@ -212,6 +216,12 @@ class Chat extends React.Component {
     }.bind(this));
     return (
         <div>
+          <input
+              type="text"
+              placeholder="To"
+              value={this.state.addressee}
+              onChange={this.handleAddresseeChange.bind(this)}
+          />
           <InputForm onSend={this.sendTestMessage.bind(this)}/>
           <ul>{ logItems }</ul>
         </div>
