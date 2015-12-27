@@ -1,3 +1,6 @@
 DEBUG = False  # set to False in production mode
 
 SECRET_KEY = "CHANGE_ME"
+
+BOSH_ENDPOINT_EXTERNAL = "http://localhost:5280/http-bind"
+BOSH_ENDPOINT_INTERNAL = "http://localhost:5280/http-bind"

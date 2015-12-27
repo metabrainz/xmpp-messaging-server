@@ -15,9 +15,7 @@
     <script src="{{ 'common.js'|make_static_path }}"></script>
     <script type='text/javascript'>
       var AttacherConfig = {
-        JID: '{{ jid }}',
-        SID: '{{ sid }}',
-        RID: '{{ rid }}'
+        service: '{{ config['BOSH_ENDPOINT_EXTERNAL'] }}'
       };
     </script>
     <script src="{{ 'attacher.js'|make_static_path }}"></script>

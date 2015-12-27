@@ -6,6 +6,109 @@ require("strophe");
 // Documentation for Strophe.js is available at http://strophe.im/strophejs/doc/1.2.3
 
 
+let STATUS = {
+  DISCONNECTED: "disconnected",
+  CONNECTING: "connecting",
+  CONNECTED: "connected",
+  FAILED: "failed",
+};
+
+class ConnectionManager extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      status: STATUS.DISCONNECTED,
+      connectionInfo: null,
+      // TODO: Cleanup these after testing:
+      jid: "test2@localhost",
+      password: "test2",
+    };
+  }
+
+  handleConnect(event) {
+    let jid = this.state.jid.trim();
+    let password = this.state.password.trim();
+    if (!jid || !password) {
+      return;
+    }
+
+    let so = this;
+    this.setState({status: STATUS.CONNECTING});
+    $.ajax({
+      type: "GET",
+      url: "/connect",
+      data: {
+        "jid": this.state.jid,
+        "password": this.state.password,
+      },
+      success: function (data, textStatus, jqXHR) {
+        so.setState({
+          status: STATUS.CONNECTED,
+          connectionInfo: {
+            jid: data.jid,
+            sid: data.sid,
+            rid: data.rid,
+          },
+        });
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        so.setState({status: STATUS.FAILED});
+      }
+    });
+
+    return true;
+  }
+
+  handleJIDChange(event) {
+    this.setState({jid: event.target.value});
+  }
+
+  handlePasswordChange(event) {
+    this.setState({password: event.target.value});
+  }
+
+  render() {
+    if (this.state.status == STATUS.DISCONNECTED) {
+      return (
+          <div>
+            <input
+                type="text"
+                placeholder="JID"
+                value={this.state.jid}
+                onChange={this.handleJIDChange.bind(this)}
+            />
+            <input
+                type="password"
+                placeholder="Password"
+                value={this.state.password}
+                onChange={this.handlePasswordChange.bind(this)}
+            />
+            <button onClick={this.handleConnect.bind(this)}>Connect</button>
+          </div>
+      );
+    } else if (this.state.status == STATUS.CONNECTING) {
+      return (<div>Connecting...</div>)
+    } else if (this.state.status == STATUS.CONNECTED) {
+      return (<Chat service={ this.props.service }
+                    jid={ this.state.connectionInfo.jid }
+                    sid={ this.state.connectionInfo.sid }
+                    rid={ this.state.connectionInfo.rid }/>)
+    } else if (this.state.status == STATUS.FAILED) {
+      return (<div>Failed to connect!</div>)
+    } else {
+      throw "Unknown state of ConnectionManager: " + this.state.status;
+    }
+  }
+
+}
+
+ConnectionManager.propTypes = {
+  service: PropTypes.string.isRequired,
+};
+
+
+// Chat class attaches to existing XMPP session.
 class Chat extends React.Component {
 
   constructor(props) {
@@ -44,7 +147,7 @@ class Chat extends React.Component {
     this.setState({connection: connection}, function () {
       this.state.connection.sendIQ(
           $iq({
-            to: Strophe.getDomainFromJid(AttacherConfig.JID),
+            to: Strophe.getDomainFromJid(this.props.jid),
             type: "get"
           })
               .c('query', {
@@ -154,11 +257,11 @@ class InputForm extends React.Component {
       return;
     }
     try {
-    this.props.onSend(message);
-    this.setState({message: event.target.value});
-      } catch (e) {
-        console.error(e);
-      }
+      this.props.onSend(message);
+      this.setState({message: event.target.value});
+    } catch (e) {
+      console.error(e);
+    }
     return true;
   }
 
@@ -191,10 +294,6 @@ $(document).ready(function () {
   const CONTAINER_ELEMENT_ID = "react-container";
   let container = document.getElementById(CONTAINER_ELEMENT_ID);
   if (container) ReactDOM.render(
-      <Chat service="http://localhost:5280/http-bind"
-            jid={ AttacherConfig.JID }
-            sid={ AttacherConfig.SID }
-            rid={ AttacherConfig.RID }
-      />,
+      <ConnectionManager service={AttacherConfig.service}/>,
       container);
 });
