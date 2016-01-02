@@ -38,10 +38,6 @@ def is_user(username, server):
     return True
 
 
-def set_password(username, server, password):
-    return True
-
-
 while True:
     data = from_ejabberd()
     success = False
@@ -50,6 +46,4 @@ while True:
             success = auth(data[1], data[2], data[3])
         elif data[0] == "isuser":
             success = is_user(data[1], data[2])
-        elif data[0] == "setpass":
-            success = set_password(data[1], data[2], data[3])
     to_ejabberd(success)
