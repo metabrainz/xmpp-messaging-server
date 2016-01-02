@@ -10,6 +10,8 @@ let through2 = require('through2');
 let Q = require('q');
 let yarb = require('yarb');
 
+var devMode = String(process.env.NODE_ENV) !== 'production';
+
 const CACHED_BUNDLES = new Map();
 const STATIC_DIR = path.resolve(__dirname, '../static');
 const BUILD_DIR = path.resolve(STATIC_DIR, 'build');
@@ -70,7 +72,7 @@ function runYarb(resourceName, callback) {
   }
 
   let bundle = transformBundle(yarb(path.resolve(SCRIPTS_DIR, resourceName), {
-    debug: false // disable sourcemaps
+    debug: devMode // Enable sourcemaps if in development mode
   }));
 
   if (callback) {
