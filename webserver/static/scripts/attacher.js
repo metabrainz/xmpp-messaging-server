@@ -102,7 +102,7 @@ class Chat extends React.Component {
     super(props);
     this.state = {
       connection: null,
-      addressee: "test@localhost",
+      addressee: "",
       msgLog: [],
     };
   }
@@ -179,7 +179,7 @@ class Chat extends React.Component {
 
   sendTestMessage(body) {
     let reply = $msg({
-      to: this.state.addressee,
+      to: this.state.addressee + "@" + Strophe.getDomainFromJid(this.props.jid),
       type: 'chat'
     })
         .cnode(Strophe.xmlElement('body', body)).up()
@@ -205,7 +205,7 @@ class Chat extends React.Component {
         <div>
           <input
               type="text"
-              placeholder="To"
+              placeholder="To (username)"
               value={this.state.addressee}
               onChange={this.handleAddresseeChange.bind(this)}
           />
