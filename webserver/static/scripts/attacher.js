@@ -21,15 +21,13 @@ class ConnectionManager extends React.Component {
       status: STATUS.DISCONNECTED,
       connectionInfo: null,
       // TODO: Cleanup these after testing:
-      jid: "test2@localhost",
-      password: "test2",
+      username: "",
     };
   }
 
   handleConnect(event) {
-    let jid = this.state.jid.trim();
-    let password = this.state.password.trim();
-    if (!jid || !password) {
+    let username = this.state.username.trim();
+    if (!username) {
       return;
     }
 
@@ -39,8 +37,7 @@ class ConnectionManager extends React.Component {
       type: "GET",
       url: "/connect",
       data: {
-        "jid": this.state.jid,
-        "password": this.state.password,
+        "username": this.state.username,
       },
       success: function (data, textStatus, jqXHR) {
         so.setState({
@@ -60,12 +57,8 @@ class ConnectionManager extends React.Component {
     return true;
   }
 
-  handleJIDChange(event) {
-    this.setState({jid: event.target.value});
-  }
-
-  handlePasswordChange(event) {
-    this.setState({password: event.target.value});
+  handleUsernameChange(event) {
+    this.setState({username: event.target.value});
   }
 
   render() {
@@ -74,15 +67,9 @@ class ConnectionManager extends React.Component {
           <div>
             <input
                 type="text"
-                placeholder="JID"
-                value={this.state.jid}
-                onChange={this.handleJIDChange.bind(this)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={this.state.password}
-                onChange={this.handlePasswordChange.bind(this)}
+                placeholder="Username"
+                value={this.state.username}
+                onChange={this.handleUsernameChange.bind(this)}
             />
             <button onClick={this.handleConnect.bind(this)}>Connect</button>
           </div>

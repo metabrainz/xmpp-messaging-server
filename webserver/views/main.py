@@ -6,21 +6,24 @@ from webserver.xmpp.bosh_session import BOSHSession
 main_bp = Blueprint('main', __name__)
 
 
-@main_bp.route("/")
-def index():
-    return render_template("index.html")
-
-
 @main_bp.route("/connect")
 def connect():
-    jid = request.args.get("jid")
-    password = request.args.get("password")
-    if not (jid or password):
-        raise BadRequest("You need to specify 'jid' and 'password' parameters.")
-    bs = BOSHSession(current_app.config["BOSH_ENDPOINT_INTERNAL"], jid, password)
+    username = request.args.get("username")
+    if not username:
+        raise BadRequest("You need to provide a username.")
+    # TODO: Implement this properly
+    jid = "%s@%s" % (username, current_app.config.get("XMPP_DOMAIN"))
+    password = "hunter2"
+    bs = BOSHSession(current_app.config.get("BOSH_ENDPOINT_INTERNAL"), jid, password)
     bs.start_session_and_auth()
     return jsonify({
         "jid": bs.jid.full,
         "sid": bs.sid,
         "rid": bs.rid,
     })
+
+
+# TODO: Remove this view after testing is done:
+@main_bp.route("/")
+def index():
+    return render_template("index.html")
